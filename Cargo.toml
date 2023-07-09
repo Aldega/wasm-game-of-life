@@ -27,6 +27,14 @@ console_error_panic_hook = { version = "0.1.6", optional = true }
 # allocator, however.
 wee_alloc = { version = "0.4.5", optional = true }
 
+
+#специальная зависимость для возможности вызова console.log
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+]
+
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
 

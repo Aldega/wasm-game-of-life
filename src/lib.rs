@@ -17,6 +17,16 @@ extern {
     fn alert(s: &str);
 }
 
+
+extern crate web_sys;
+
+// A macro to provide `println!(..)`-style syntax for `console.log` logging.
+macro_rules! log {
+    ( $( $t:tt )* ) => {
+        web_sys::console::log_1(&format!( $( $t )* ).into());
+    }
+}
+
 #[wasm_bindgen]
 pub fn greet(name: &str) {
     alert(&format!("Hello  фыва , {}!", name));
@@ -39,6 +49,7 @@ impl Universe {
         for delta_row in [self.height - 1, 0, 1].iter().cloned() {
             for delta_col in [self.width - 1, 0, 1].iter().cloned() {
                 if delta_row == 0 && delta_col == 0 {
+
                     continue;
                 }
 
@@ -63,6 +74,12 @@ impl Universe {
                 let cell = self.cells[idx];
                 let live_neighbors = self.live_neighbor_count(row, col);
 
+                // log!("cell[{}, {}] is initially {:?} and has {} live neighbors",
+                //     row,
+                //     col,
+                //     cell,
+                //     live_neighbors);
+
                 next.set(idx, match (cell, live_neighbors) {
                     (true, x) if x < 2 => false,
                     (true, 2) | (true, 3) | (false, 3) => true,
@@ -71,6 +88,10 @@ impl Universe {
                 });
             }
         }
+
+        
+
+        // log!("    it becomes {:?}", next);
 
         self.cells = next;
     }
@@ -95,6 +116,7 @@ impl Display for Universe {
 impl Universe {
 
     pub fn new() -> Universe {
+        utils::set_panic_hook(); // хук запускает перехват паники и вывод его в console.error в браузере.
         let width: u32 = 100;
         let height: u32 = 64;
 

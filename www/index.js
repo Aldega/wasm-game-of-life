@@ -5,7 +5,7 @@ const universe = Universe.new();
 universe.set_random_cells();
 
 const renderLoop = () => {
-
+    // debugger; //специальная программная точка останова в js, закоментил, чтобы не напрягала. В случае чего разкомментить. 
     pre.textContent = universe.render();
     universe.tick();
     requestAnimationFrame(renderLoop);
